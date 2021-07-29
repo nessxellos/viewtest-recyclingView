@@ -1,6 +1,8 @@
 package com.cos.viewtest.adapter;
 
 import android.content.Context;
+import android.nfc.Tag;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,8 @@ import java.util.List;
 // 2. 어댑터 만들기(어댑터 상속)
 public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.MyViewHolder> {
 
+    private PersonAdapter personAdapter = this;
+    private static final String TAG = "MyTag";
     private MainActivity mContext;
 
     public PersonAdapter(MainActivity mContext){
@@ -35,6 +39,15 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.MyViewHold
         notifyDataSetChanged(); // 데이터 변경하는곳에는 무조건 걸어줘야됨
     }
 
+    public List<Person> getItems(){
+        return persons;
+    }
+
+    public void removeItem(int index){
+        persons.remove(index);
+        notifyDataSetChanged();
+    }
+
     // 아이템 1개 추가
     public void addItem(Person person){
         this.persons.add(person);
@@ -48,6 +61,8 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.MyViewHold
         LayoutInflater layoutInflater =
                 (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(R.layout.person_item, parent, false);
+
+
         return new MyViewHolder(view);
     }
 
@@ -65,7 +80,7 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.MyViewHold
     }
 
     // 1. 뷰홀더 만들기(뷰홀더 상속)
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvName, tvTel;
 
@@ -74,6 +89,20 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.MyViewHold
             super(itemView);
             tvName = itemView.findViewById(R.id.tvName);
             tvTel = itemView.findViewById(R.id.tvTel);
+
+            initListener();
+        }
+
+        private void initListener(){
+            itemView.setOnClickListener(v ->{
+                Log.d(TAG, "onCreateViewHolder: "+ getAdapterPosition());
+                int index = getAdapterPosition();
+                Log.d(TAG, "initListener: "+personAdapter.getItems().get(index).getName());
+                personAdapter.removeItem(index);
+                // view를 통해서 값을 찾기
+//                TextView t = v.findViewById(R.id.tvName);
+//                Log.d(TAG, "initListener: "+t.getText());
+            });
         }
 
         // 앱 구동시 + 스크롤할 때 발동동

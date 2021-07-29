@@ -1,6 +1,8 @@
 package com.cos.viewtest;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -56,6 +58,22 @@ public class MainActivity extends AppCompatActivity {
         fabAdd.setOnClickListener(view -> {
             personAdapter.addItem(new Person("이름new", "0102222"));
         });
+
+
+        // 슬라이드를 통한 삭제 구현현
+        new ItmTouchHelper(new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int index = viewHolder.getAdapterPosition();
+                personAdapter.removeItem(index);
+            }
+        }).attachToRecyclerView(rvPersons);
+
     }
 
     public void mRvScroll(){
