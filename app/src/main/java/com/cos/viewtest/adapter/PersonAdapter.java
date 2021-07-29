@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cos.viewtest.MainActivity;
 import com.cos.viewtest.R;
 import com.cos.viewtest.model.Person;
 
@@ -18,13 +19,27 @@ import java.util.List;
 // 2. 어댑터 만들기(어댑터 상속)
 public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.MyViewHolder> {
 
+    private MainActivity mContext;
+
+    public PersonAdapter(MainActivity mContext){
+        this.mContext = mContext;
+    }
+
     // 3. 컬렉션
     private List<Person> persons = new ArrayList<>();
 
     // 4. 컬렉션 데이터 세팅
     public void addItems(List<Person> persons){
+
         this.persons = persons;
         notifyDataSetChanged(); // 데이터 변경하는곳에는 무조건 걸어줘야됨
+    }
+
+    // 아이템 1개 추가
+    public void addItem(Person person){
+        this.persons.add(person);
+        notifyDataSetChanged();
+        mContext.mRvScroll();
     }
 
     // ViewHolder 객체 만드는 메서드, 그림만 그림
